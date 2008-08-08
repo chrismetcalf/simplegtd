@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>name</key>
+	<string>SimpleGTD</string>
+	<key>ordering</key>
+	<array>
+		<string>72B6DB99-6FD7-4CC3-BE98-8D2FC94F9A71</string>
+		<string>CA904D07-8CA2-4E53-BCA6-28702FE4B9D6</string>
+		<string>484EEDB2-E969-4603-ACE3-974CB0967B71</string>
+	</array>
+	<key>uuid</key>
+	<string>64391963-B029-4ABB-B9CB-AAF61EDFEEE6</string>
+</dict>
+</plist>

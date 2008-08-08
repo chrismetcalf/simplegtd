@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>#!/usr/bin/env ruby
+
+# Open all our various files
+current_file = File.open(ENV['TM_SELECTED_FILE'])
+done_file = File.new("#{ENV['TM_PROJECT_DIRECTORY']}/done.gtd")
+
+current_file.each do |line|
+  # Move completed tasks to the done.gtd file
+  if line =~ /^\+/
+    done_file.puts line
+    next
+  end
+  
+  if line.length &gt; 1
+    puts line
+  end
+end
+</string>
+	<key>input</key>
+	<string>document</string>
+	<key>keyEquivalent</key>
+	<string>^~@c</string>
+	<key>name</key>
+	<string>Cleanup</string>
+	<key>output</key>
+	<string>showAsTooltip</string>
+	<key>scope</key>
+	<string>text.html.simplegtd</string>
+	<key>uuid</key>
+	<string>72B6DB99-6FD7-4CC3-BE98-8D2FC94F9A71</string>
+</dict>
+</plist>

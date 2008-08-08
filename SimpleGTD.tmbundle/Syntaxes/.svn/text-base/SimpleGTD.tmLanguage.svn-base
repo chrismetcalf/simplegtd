@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>fileTypes</key>
+	<array>
+		<string>gtd.txt</string>
+	</array>
+	<key>firstLineMatch</key>
+	<string>^#!/.*\bgtd\b</string>
+	<key>keyEquivalent</key>
+	<string>^~@g</string>
+	<key>name</key>
+	<string>SimpleGTD</string>
+	<key>patterns</key>
+	<array>
+		<dict>
+			<key>match</key>
+			<string>@\w+</string>
+			<key>name</key>
+			<string>constant.other.context.simplegtd</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>_\w+</string>
+			<key>name</key>
+			<string>variable.other.person.simplegtd</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>#\w+</string>
+			<key>name</key>
+			<string>string.other.project.simplegtd</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>\[\d{4}-\d{2}-\d{2}\]</string>
+			<key>name</key>
+			<string>support.other.due-date.simplegtd</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>\(\d{4}-\d{2}-\d{2}\)</string>
+			<key>name</key>
+			<string>comment.other.creation-date.simplegtd</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>^\+.*$</string>
+			<key>name</key>
+			<string>comment.line.done.simplegtd</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>^#.*$</string>
+			<key>name</key>
+			<string>comment.line.number-sign.comment.simplegtd</string>
+		</dict>
+	</array>
+	<key>scopeName</key>
+	<string>text.html.simplegtd</string>
+	<key>uuid</key>
+	<string>484EEDB2-E969-4603-ACE3-974CB0967B71</string>
+</dict>
+</plist>
