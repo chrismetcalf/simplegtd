@@ -1,0 +1,180 @@
+#!/usr/bin/env ruby
+
+# == Synopsis
+#   SimpleGTD is a simple command line utility for managing a collection of 
+#   text files in a largely GTD-compatible manner.
+#
+# == Examples
+# 
+#   Get all the actions in a given context, for a given project, or involving 
+#   a particular person:
+#     gtd get @work
+#     gtd get #ProjectName
+#     gtd get _person
+#
+#   Get all your contexts
+#     gtd contexts
+#
+# == Usage
+#
+#   Commands generally comprise of an action and then an argument.
+#
+#   gtd [options] [command] [argument]
+#
+# == Config File
+#
+#   SimpleGTD will 
+# 
+# == Options
+#   -h, --help          Displays help message
+#   -v, --version       Displays the current version
+#   -q, --quiet         Suppresses all output
+#   -V, --verbose       Be loud and obnoxious
+#   -c, --config        Override the default config file 
+#                           (Default: ~/GTD/.gtd.conf)
+#   -d, --directory     Override the default GTD directory
+#                           (Default: ~/GTD)
+#
+# == Commands
+#
+#   Commands can be spelled out fully, or a unique stem can be used instead. 
+#   The shortest unique stems are provided for your benefit below
+
+#   a, add [line]           Adds a single action 
+#   g, get [query]          Dumps out all the actions with a given @context,
+#                               #project, or _name. Essentially it's a fancy 
+#                               "grep" command
+#   c, contexts             Dumps out all your contexts
+#   p, projects             Dumps out all your projects
+#   pe, people              Dumps out all your people
+#   r, rename [from] [to]   Globally rename
+# == Author
+#   Chris Metcalf
+#   chris@chrismetcalf.net
+#   http://chrismetcalf.net
+#
+# == Copyright
+#   Copyright (c) 2008 Chris Metcalf. Licensed under the GNU License
+#   http://www.gnu.org/copyleft/gpl.html
+#
+#   All redistributions must retain this notice and provide attribution back 
+#   to the original author (me!).
+#
+
+require 'getoptlong'
+require 'rdoc/usage'
+require 'ostruct'
+require 'date'
+
+class SimpleGTD
+  VERSION = '0.0.1'
+  
+  attr_reader :options
+  
+  def initialize(arguments, stdin)
+    @arguments = arguments
+    @stdin = stdin
+    
+    # We'll keep a logger around for the hell of it
+    @logger = Logger.new(STDERR)
+    @logger.level = Logger.WARN # Default logging level
+    
+    # Set our intelligent defaults
+    @options = OpenStruct.new
+    @options.verbose = false
+    @options.quiet = false
+    @options.directory = "~/GTD"
+    @options.config = "#{@options.directory}/.gtd.conf"
+  end
+  
+  def run
+    # Parse options and check our arguments
+    if parsed_options? && parsed_config? && parsed_command? && arguments_valid?
+      
+      puts "Hello there"
+      
+    else
+      # You fool! You messed it all up!
+      output_usage
+      exit 1
+    end
+    
+    # Do stuff
+  end
+  
+  protected
+    def parsed_options?
+      opts = GetoptLong.new(
+        [ '--help',       '-h',   GetoptLong::NO_ARGUMENT ],
+        [ '--version',    '-v',   GetoptLong::NO_ARGUMENT ],
+        [ '--quiet',      '-q',   GetoptLong::NO_ARGUMENT ],
+        [ '--verbose',    '-V',   GetoptLong::NO_ARGUMENT ],
+        [ '--config',     '-c',   GetoptLong::REQUIRED_ARGUMENT ],
+        [ '--directory',  '-d',   GetoptLong::REQUIRED_ARGUMENT ]   
+      )
+      
+      opts.each do |opt, arg|
+        case opt
+        when '--help'
+          output_help
+          
+        when '--version'
+          output_version
+          exit 0
+          
+        when '--quiet'
+          @options.quiet = true
+          @logger.level = Logger::FATAL
+          
+        when '--verbose'
+          @options.verbose = true
+          @logger.level = Logger::DEBUG
+          
+        when '--config'
+          @options.config = arg
+          
+        when '--directory'
+          @options.directory = arg
+        end
+      end
+      
+      # Looks like it all went ok
+      true
+    end
+    
+    def parsed_config?
+      # TODO Config code
+      true
+    end
+    
+    def parsed_command?
+      # The command is always first after the argument
+      command = ARGV.shift
+      
+      @logger.debug "Got command: #{command}"
+      
+      
+      true
+    end
+    
+    def arguments_valid?
+      # TODO Validation :)
+      true
+    end
+    
+    def output_usage
+      RDoc::usage('usage')
+    end
+    
+    def output_help
+      output_version
+      RDoc::usage()
+    end
+    
+    def output_version
+      puts "#{File.basename(__FILE__)} version #{VERSION}"
+    end
+end
+
+app = SimpleGTD.new(ARGV, STDIN)
+app.run
