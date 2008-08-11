@@ -39,13 +39,17 @@
 #
 #   Commands can be spelled out fully, or a unique stem can be used instead. 
 #   The shortest unique stems are provided for your benefit below
-
-#   a, add [line]           Adds a single action 
+#
+#   a, add [line]           Adds a single action to the inbox
+#   b, binge                Goes into an interactive mode where you can add a
+#                               bunch of actions. A blank line exits.
+#   d, due [date]           Dumps all the actions due within a given timeframe
+#   cl, clean [file]        Cleans up a given file. By default cleans the inbox
 #   g, get [query]          Dumps out all the actions with a given @context,
 #                               #project, or _name. Essentially it's a fancy 
 #                               "grep" command
-#   c, contexts             Dumps out all your contexts
-#   p, projects             Dumps out all your projects
+#   co, contexts            Dumps out all your contexts
+#   pr, projects            Dumps out all your projects
 #   pe, people              Dumps out all your people
 #   r, rename [from] [to]   Globally rename
 # == Author
@@ -65,9 +69,12 @@ require 'getoptlong'
 require 'rdoc/usage'
 require 'ostruct'
 require 'date'
+require 'logger'
 
 class SimpleGTD
   VERSION = '0.0.1'
+  
+  COMMANDS = ['add', 'binge', 'due', 'clean', 'get', 'contexts', 'projects', 'people', 'rename']
   
   attr_reader :options
   
@@ -77,7 +84,7 @@ class SimpleGTD
     
     # We'll keep a logger around for the hell of it
     @logger = Logger.new(STDERR)
-    @logger.level = Logger.WARN # Default logging level
+    @logger.level = Logger::WARN # Default logging level
     
     # Set our intelligent defaults
     @options = OpenStruct.new
@@ -85,14 +92,24 @@ class SimpleGTD
     @options.quiet = false
     @options.directory = "~/GTD"
     @options.config = "#{@options.directory}/.gtd.conf"
+    @options.inbox = "#{@options.directory}/inbox.gtd.txt"
+    @options.done = "#{@options.directory}/done.gtd.txt"
   end
   
   def run
     # Parse options and check our arguments
     if parsed_options? && parsed_config? && parsed_command? && arguments_valid?
       
-      puts "Hello there"
-      
+      # Call our action method directly      
+      begin
+        m = self.method("command_#{@options.command}")
+	      m.call
+        
+      rescue Exception => e
+        @logger.error "Something went wrong here. Couldn't find method for #{@options.command}"
+        exit 1
+      end
+            
     else
       # You fool! You messed it all up!
       output_usage
@@ -151,8 +168,19 @@ class SimpleGTD
       # The command is always first after the argument
       command = ARGV.shift
       
-      @logger.debug "Got command: #{command}"
+      # See if the command we were given is unique enough
+      matches = COMMANDS.find_all { |e| e =~ /^#{command}/ }
       
+      if matches.nil? || matches.size <= 0
+        puts "Invalid command #{command}"
+        output_help
+      elsif matches.size > 1
+        puts "Command #{command} is too vague. Matched #{matches.inspect}"
+        output_help
+      end
+          
+      # We found our match, get out of here
+      @options.command = matches[0]
       
       true
     end
@@ -174,7 +202,39 @@ class SimpleGTD
     def output_version
       puts "#{File.basename(__FILE__)} version #{VERSION}"
     end
+
+
+    # Our actual "command" methods
+    def command_add
+      inbox = File.open(@options.inbox, "a")
+      inbox.puts()
+    end
+    
+    def command_binge
+      
+    end
+    
+    def command_contexts
+      
+    end
+    
+    def command_projects
+    
+    end
+    
+    def command_people
+      
+    end
+    
+    def command_get
+      
+    end
+    
+    def command_rename
+      
+    end
 end
 
 app = SimpleGTD.new(ARGV, STDIN)
 app.run
+
